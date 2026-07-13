@@ -21,3 +21,5 @@
 /* V15 */
 textarea{width:100%;box-sizing:border-box;border:1px solid #343944;border-radius:16px;background:#101217;color:#f5f5f5;padding:16px;font:inherit;resize:vertical}
 .premio-box{overflow:hidden}.banner-premio{display:block;width:100%;max-height:360px;object-fit:cover;border-radius:18px;margin-bottom:18px}.texto-pre{white-space:pre-wrap;line-height:1.65}.status-aberto{color:#3ddc84!important;font-weight:800}.status-fechado{color:#ff6b72!important;font-weight:800}.vendas-fechadas{opacity:.8}.vendas-fechadas form{pointer-events:none}.config-destaque{border-color:#d9a31a}
+
+.rodape-versao{text-align:center;padding:24px 16px 38px;color:#8f96a3;font-size:13px}.rodape-versao p{margin:4px 0}

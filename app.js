@@ -62,7 +62,7 @@ function copiarPix(){const chave=$('pixChave').textContent.trim();if(!chave)retu
 function aplicarConfigRifa(c){
   configRifa=Object.assign({nomeRifa:'Rifa Online',precoNumero:20,quantidadeNumeros:100,premio:'',descricao:'',dataSorteio:'',horaSorteio:'',banner:'',regulamento:'',vendasAbertas:true},c||{});
   PRECO=Number(configRifa.precoNumero||20);TOTAL=Math.max(1,Math.min(1000,Number(configRifa.quantidadeNumeros||100)));VENDAS_ABERTAS=configRifa.vendasAbertas!==false;
-  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15';
+  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.5';
   $('nomeRifaTitulo').textContent=configRifa.nomeRifa||'Escolha seus números';
   $('quantidadeCabecalho').textContent=String(TOTAL);
   $('precoCabecalho').textContent=moeda(PRECO);
@@ -77,5 +77,21 @@ function aplicarConfigRifa(c){
   $('regulamentoBox').classList.toggle('oculto',!configRifa.regulamento);$('regulamentoTexto').textContent=configRifa.regulamento||'';
   selecionados=selecionados.filter(n=>n<=TOTAL);desenhar();resumo();
 }
-async function init(){ if('serviceWorker' in navigator)navigator.serviceWorker.register('service-worker.js?v=15.1').catch(()=>{});$('formRifa').onsubmit=reservar;$('btnInformarPagamento').onclick=informarPagamento;$('btnRepetirNumeros').onclick=repetir;$('btnCopiarPix').onclick=copiarPix;$('btnAtualizar').onclick=()=>location.reload();$('btnMinhasReservas').onclick=minhasReservas;$('btnBuscarCpf').onclick=buscarReservasCpf;$('btnNovaReserva').onclick=()=>{$('sucessoBox').className='card sucesso oculto';reservaAtualId='';scrollTo(0,0);};$('telefone').oninput=e=>{let v=digs(e.target.value).slice(0,11);if(v.length>6)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);e.target.value=v;};$('cpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();buscarReservasCpf();}};try{await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);if(!auth.currentUser)await auth.signInAnonymously();await recuperarReservaPendente();$('mensagemGrade').className='aviso oculto';db.ref('rifa/configPublica/rifa').on('value',s=>aplicarConfigRifa(s.val()||{}));db.ref('rifa/numeros').on('value',s=>{mapaNumeros=s.val()||{};selecionados=selecionados.filter(n=>!mapaNumeros[n]||mapaNumeros[n].status==='livre');desenhar();resumo();});db.ref('rifa/configPublica/pagamentos').on('value',s=>pagamentos=s.val()||{});db.ref('rifa/estatisticasPublicas').on('value',s=>{const e=s.val()||{};if($('pubParticipantes'))$('pubParticipantes').textContent=String(Number(e.participantes||0));if($('pubArrecadado'))$('pubArrecadado').textContent=moeda(Number(e.arrecadado||0));});await minhasReservas();}catch(e){$('mensagemGrade').textContent='Erro ao conectar: '+e.message;$('mensagemGrade').className='aviso';}}
+
+let recarregouPorAtualizacao=false;
+async function registrarServiceWorker(){
+  if(!('serviceWorker' in navigator))return;
+  try{
+    const reg=await navigator.serviceWorker.register('service-worker.js?v=15.5',{updateViaCache:'none'});
+    await reg.update().catch(()=>{});
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(recarregouPorAtualizacao)return;
+      recarregouPorAtualizacao=true;
+      location.reload();
+    });
+    setInterval(()=>reg.update().catch(()=>{}),5*60*1000);
+  }catch(_){ }
+}
+
+async function init(){ if('serviceWorker' in navigator)registrarServiceWorker();$('formRifa').onsubmit=reservar;$('btnInformarPagamento').onclick=informarPagamento;$('btnRepetirNumeros').onclick=repetir;$('btnCopiarPix').onclick=copiarPix;$('btnAtualizar').onclick=()=>location.reload();$('btnMinhasReservas').onclick=minhasReservas;$('btnBuscarCpf').onclick=buscarReservasCpf;$('btnNovaReserva').onclick=()=>{$('sucessoBox').className='card sucesso oculto';reservaAtualId='';scrollTo(0,0);};$('telefone').oninput=e=>{let v=digs(e.target.value).slice(0,11);if(v.length>6)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);e.target.value=v;};$('cpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();buscarReservasCpf();}};try{await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);if(!auth.currentUser)await auth.signInAnonymously();await recuperarReservaPendente();$('mensagemGrade').className='aviso oculto';db.ref('rifa/configPublica/rifa').on('value',s=>aplicarConfigRifa(s.val()||{}));db.ref('rifa/numeros').on('value',s=>{mapaNumeros=s.val()||{};selecionados=selecionados.filter(n=>!mapaNumeros[n]||mapaNumeros[n].status==='livre');desenhar();resumo();});db.ref('rifa/configPublica/pagamentos').on('value',s=>pagamentos=s.val()||{});db.ref('rifa/estatisticasPublicas').on('value',s=>{const e=s.val()||{};if($('pubParticipantes'))$('pubParticipantes').textContent=String(Number(e.participantes||0));if($('pubArrecadado'))$('pubArrecadado').textContent=moeda(Number(e.arrecadado||0));});await minhasReservas();}catch(e){$('mensagemGrade').textContent='Erro ao conectar: '+e.message;$('mensagemGrade').className='aviso';}}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();})();
