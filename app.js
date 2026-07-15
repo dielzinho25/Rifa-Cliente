@@ -62,7 +62,7 @@ function copiarPix(){const chave=$('pixChave').textContent.trim();if(!chave)retu
 function aplicarConfigRifa(c){
   configRifa=Object.assign({nomeRifa:'Rifa Online',precoNumero:20,quantidadeNumeros:100,premio:'',descricao:'',dataSorteio:'',horaSorteio:'',banner:'',regulamento:'',vendasAbertas:true},c||{});
   PRECO=Number(configRifa.precoNumero||20);TOTAL=Math.max(1,Math.min(1000,Number(configRifa.quantidadeNumeros||100)));VENDAS_ABERTAS=configRifa.vendasAbertas!==false;
-  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.6';
+  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.7';
   $('nomeRifaTitulo').textContent=configRifa.nomeRifa||'Escolha seus números';
   $('quantidadeCabecalho').textContent=String(TOTAL);
   $('precoCabecalho').textContent=moeda(PRECO);
@@ -82,7 +82,7 @@ let recarregouPorAtualizacao=false;
 async function registrarServiceWorker(){
   if(!('serviceWorker' in navigator))return;
   try{
-    const reg=await navigator.serviceWorker.register('service-worker.js?v=15.6',{updateViaCache:'none'});
+    const reg=await navigator.serviceWorker.register('service-worker.js?v=15.7',{updateViaCache:'none'});
     await reg.update().catch(()=>{});
     navigator.serviceWorker.addEventListener('controllerchange',()=>{
       if(recarregouPorAtualizacao)return;
