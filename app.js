@@ -62,7 +62,7 @@ function copiarPix(){const chave=$('pixChave').textContent.trim();if(!chave)retu
 function aplicarConfigRifa(c){
   configRifa=Object.assign({nomeRifa:'Rifa Online',precoNumero:20,quantidadeNumeros:100,premio:'',descricao:'',dataSorteio:'',horaSorteio:'',banner:'',regulamento:'',vendasAbertas:true},c||{});
   PRECO=Number(configRifa.precoNumero||20);TOTAL=Math.max(1,Math.min(1000,Number(configRifa.quantidadeNumeros||100)));VENDAS_ABERTAS=configRifa.vendasAbertas!==false;
-  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.7';
+  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.8';
   $('nomeRifaTitulo').textContent=configRifa.nomeRifa||'Escolha seus números';
   $('quantidadeCabecalho').textContent=String(TOTAL);
   $('precoCabecalho').textContent=moeda(PRECO);
@@ -93,5 +93,31 @@ async function registrarServiceWorker(){
   }catch(_){ }
 }
 
-async function init(){ if('serviceWorker' in navigator)registrarServiceWorker();$('formRifa').onsubmit=reservar;$('btnInformarPagamento').onclick=informarPagamento;$('btnRepetirNumeros').onclick=repetir;$('btnCopiarPix').onclick=copiarPix;$('btnAtualizar').onclick=()=>location.reload();if($('btnMinhasReservas'))$('btnMinhasReservas').onclick=minhasReservas;$('btnBuscarCpf').onclick=buscarReservasCpf;$('btnNovaReserva').onclick=()=>{$('sucessoBox').className='card sucesso oculto';reservaAtualId='';scrollTo(0,0);};$('telefone').oninput=e=>{let v=digs(e.target.value).slice(0,11);if(v.length>6)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);e.target.value=v;};$('cpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();buscarReservasCpf();}};try{await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);if(!auth.currentUser)await auth.signInAnonymously();await recuperarReservaPendente();$('mensagemGrade').className='aviso oculto';db.ref('rifa/configPublica/rifa').on('value',s=>aplicarConfigRifa(s.val()||{}));db.ref('rifa/numeros').on('value',s=>{mapaNumeros=s.val()||{};selecionados=selecionados.filter(n=>!mapaNumeros[n]||mapaNumeros[n].status==='livre');desenhar();resumo();});db.ref('rifa/configPublica/pagamentos').on('value',s=>pagamentos=s.val()||{});db.ref('rifa/estatisticasPublicas').on('value',s=>{const e=s.val()||{};if($('pubParticipantes'))$('pubParticipantes').textContent=String(Number(e.participantes||0));if($('pubArrecadado'))$('pubArrecadado').textContent=moeda(Number(e.arrecadado||0));});await minhasReservas();}catch(e){$('mensagemGrade').textContent='Erro ao conectar: '+e.message;$('mensagemGrade').className='aviso';}}
+function dataLocalChave(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function idVisitanteLocal(){
+  let id=localStorage.getItem('rifaVisitanteId');
+  if(!id){
+    id='v_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,12);
+    localStorage.setItem('rifaVisitanteId',id);
+  }
+  return id.replace(/[^a-zA-Z0-9_-]/g,'').slice(0,80);
+}
+async function registrarVisualizacao(){
+  try{
+    const hoje=dataLocalChave(),id=idVisitanteLocal();
+    await Promise.all([
+      db.ref('rifa/visitas/total').transaction(v=>Number(v||0)+1),
+      db.ref('rifa/visitas/porDia/'+hoje).transaction(v=>Number(v||0)+1),
+      db.ref('rifa/visitas/visitantes/'+id).transaction(v=>v||{
+        primeiraVisita:firebase.database.ServerValue.TIMESTAMP,
+        origem:'site-cliente'
+      })
+    ]);
+  }catch(e){ console.warn('Não foi possível registrar a visualização:',e.message); }
+}
+
+async function init(){ if('serviceWorker' in navigator)registrarServiceWorker();$('formRifa').onsubmit=reservar;$('btnInformarPagamento').onclick=informarPagamento;$('btnRepetirNumeros').onclick=repetir;$('btnCopiarPix').onclick=copiarPix;$('btnAtualizar').onclick=()=>location.reload();if($('btnMinhasReservas'))$('btnMinhasReservas').onclick=minhasReservas;$('btnBuscarCpf').onclick=buscarReservasCpf;$('btnNovaReserva').onclick=()=>{$('sucessoBox').className='card sucesso oculto';reservaAtualId='';scrollTo(0,0);};$('telefone').oninput=e=>{let v=digs(e.target.value).slice(0,11);if(v.length>6)v='('+v.slice(0,2)+') '+v.slice(2,7)+'-'+v.slice(7);else if(v.length>2)v='('+v.slice(0,2)+') '+v.slice(2);e.target.value=v;};$('cpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').oninput=e=>{let v=digs(e.target.value).slice(0,11);v=v.replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d)/,'$1.$2').replace(/(\d{3})(\d{1,2})$/,'$1-$2');e.target.value=v;};$('consultaCpf').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();buscarReservasCpf();}};try{await auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);if(!auth.currentUser)await auth.signInAnonymously();await registrarVisualizacao();await recuperarReservaPendente();$('mensagemGrade').className='aviso oculto';db.ref('rifa/configPublica/rifa').on('value',s=>aplicarConfigRifa(s.val()||{}));db.ref('rifa/numeros').on('value',s=>{mapaNumeros=s.val()||{};selecionados=selecionados.filter(n=>!mapaNumeros[n]||mapaNumeros[n].status==='livre');desenhar();resumo();});db.ref('rifa/configPublica/pagamentos').on('value',s=>pagamentos=s.val()||{});db.ref('rifa/estatisticasPublicas').on('value',s=>{const e=s.val()||{};if($('pubParticipantes'))$('pubParticipantes').textContent=String(Number(e.participantes||0));if($('pubArrecadado'))$('pubArrecadado').textContent=moeda(Number(e.arrecadado||0));});await minhasReservas();}catch(e){$('mensagemGrade').textContent='Erro ao conectar: '+e.message;$('mensagemGrade').className='aviso';}}
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();})();
