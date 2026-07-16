@@ -1,5 +1,5 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#111318"><title>Rifa Online V15.8</title><link rel="manifest" href="manifest.json?v=15.5"><meta name="theme-color" content="#121212"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css?v=15.5"></head><body>
-<header class="topo"><div class="topo-conteudo"><span class="selo">RIFA ONLINE • FIREBASE V15.8</span><h1 id="nomeRifaTitulo">Escolha seus números</h1><p>São <strong id="quantidadeCabecalho">100</strong> números. Cada número custa <strong id="precoCabecalho">R$ 20,00</strong>.</p><p id="statusVendas" class="texto-apoio"></p></div></header>
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><meta name="theme-color" content="#111318"><title>Rifa Online V15.9</title><link rel="manifest" href="manifest.json?v=15.9"><meta name="theme-color" content="#121212"><link rel="apple-touch-icon" href="icon-192.png"><link rel="stylesheet" href="style.css?v=15.9"></head><body>
+<header class="topo"><div class="topo-conteudo"><span class="selo">RIFA ONLINE • FIREBASE V15.9</span><h1 id="nomeRifaTitulo">Escolha seus números</h1><p>São <strong id="quantidadeCabecalho">100</strong> números. Cada número custa <strong id="precoCabecalho">R$ 20,00</strong>.</p><p id="statusVendas" class="texto-apoio"></p></div></header>
 <main class="container">
 
 <section id="premioBox" class="card premio-box oculto">
@@ -11,10 +11,40 @@
 <section class="card resumo"><h2>Seus números</h2><div class="resumo-linha"><span>Quantidade</span><strong id="quantidade">0</strong></div><div class="resumo-linha"><span>Números escolhidos</span><strong id="numerosEscolhidos">Nenhum</strong></div><div class="resumo-linha total"><span>Valor total</span><strong id="total">R$ 0,00</strong></div></section>
 <section id="formularioReservaBox" class="card"><h2>Preencha seus dados</h2><p class="texto-apoio">Os dados serão salvos no Firebase e os números aparecerão reservados para todos.</p><form id="formRifa" novalidate><div class="form-grid"><label>Nome completo<input id="nome" required placeholder="Digite seu nome completo"></label><label>Telefone<input id="telefone" inputmode="tel" required placeholder="(34) 99999-9999"></label><label>CPF<input id="cpf" inputmode="numeric" maxlength="14" required placeholder="000.000.000-00"></label><label>E-mail <small>(opcional)</small><input id="email" type="email" placeholder="seuemail@gmail.com"></label></div><label class="aceite"><input id="aceite" type="checkbox" required><span>Confirmo que os dados estão corretos.</span></label><button id="btnReservar" class="botao principal" type="submit">Reservar números</button></form></section>
 <section id="sucessoBox" class="card sucesso oculto"><div class="icone-sucesso">✓</div><h2>Reserva registrada!</h2><p>Faça o pagamento pela opção configurada pelo administrador.</p><div class="comprovante"><p><span>Código</span><strong id="codigoReserva"></strong></p><p><span>Números</span><strong id="numerosReserva"></strong></p><p><span>Total</span><strong id="valorReserva"></strong></p><p><span>Status</span><strong id="statusReserva">Aguardando confirmação</strong></p></div><a id="btnPagarMercadoPago" class="botao pagamento oculto" href="#" target="_blank" rel="noopener">Pagar no Mercado Pago</a><div id="pixBox" class="pix-box oculto"><h3>Pagar pela chave Pix</h3><p id="pixRecebedor" class="texto-apoio"></p><div class="pix-chave"><strong id="pixChave"></strong><button id="btnCopiarPix" class="botao copiar-pix" type="button">Copiar Pix</button></div></div><p id="avisoPagamento" class="aviso-pagamento oculto"></p><div class="confirmacao-cliente"><label>Nome usado no pagamento <small>(opcional)</small><input id="nomePagador" placeholder="Ex.: Ediel Rodrigues"></label><button id="btnInformarPagamento" class="botao confirmar-pagamento" type="button">✅ Já fiz o pagamento</button><p class="texto-apoio">A reserva só será confirmada depois da conferência do administrador.</p></div><button id="btnNovaReserva" class="botao secundario" type="button">Fazer outra reserva</button></section>
+
+<section class="card afiliado-box">
+  <details class="config-retratil">
+    <summary><span>🤝 Ganhe indicando amigos</span><small>Toque para abrir ou fechar</small></summary>
+    <div class="config-conteudo">
+      <p class="texto-apoio">Esta área fica oculta. Digite o seu CPF para cadastrar ou consultar somente os dados vinculados a ele. A comissão entra no saldo apenas depois que o pagamento da reserva indicada for confirmado pelo administrador.</p>
+      <div class="form-grid">
+        <label>Seu CPF<input id="afCpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"></label>
+        <label>Nome completo<input id="afNome" placeholder="Seu nome completo"></label>
+        <label>Telefone<input id="afTelefone" inputmode="tel" placeholder="(34) 99999-9999"></label>
+        <label>Chave Pix<input id="afPix" placeholder="CPF, telefone, e-mail ou chave aleatória"></label>
+      </div>
+      <div class="linha-botoes">
+        <button id="btnConsultarAfiliado" class="botao secundario" type="button">🔎 Consultar pelo CPF</button>
+        <button id="btnSalvarAfiliado" class="botao principal" type="button">💾 Criar/atualizar cadastro</button>
+      </div>
+      <p id="afMensagem" class="status-operacao"></p>
+      <div id="afPainel" class="afiliado-painel oculto">
+        <div class="dashboard-grid">
+          <div class="dash-item"><span>Saldo disponível</span><strong id="afSaldo">R$ 0,00</strong></div>
+          <div class="dash-item"><span>Total ganho</span><strong id="afTotalGanhos">R$ 0,00</strong></div>
+          <div class="dash-item"><span>Indicações confirmadas</span><strong id="afIndicacoes">0</strong></div>
+          <div class="dash-item"><span>Total já pago</span><strong id="afTotalPago">R$ 0,00</strong></div>
+        </div>
+        <label>Seu link exclusivo de indicação<div class="consulta-cpf-linha"><input id="afLink" readonly><button id="btnCopiarLinkAfiliado" class="botao principal" type="button">Copiar link</button></div></label>
+        <h3>Compras indicadas</h3><div id="afListaComissoes"><p class="texto-apoio">Nenhuma comissão confirmada.</p></div>
+      </div>
+    </div>
+  </details>
+</section>
 <section class="card consulta-cpf"><h2>Buscar minhas reservas pelo CPF</h2><p class="texto-apoio">Digite o mesmo CPF usado na reserva para consultar todas as reservas salvas no Firebase, mesmo em outro aparelho.</p><div class="consulta-cpf-linha"><input id="consultaCpf" inputmode="numeric" maxlength="14" placeholder="000.000.000-00"><button id="btnBuscarCpf" class="botao principal" type="button">Buscar reservas</button></div><div id="mensagemCpf" class="aviso oculto"></div><div id="reservasCpf"></div></section>
 
 <section class="card repetir-card"><h2>Repetir números selecionados</h2><p class="texto-apoio">Ouça em voz alta os números escolhidos.</p><button id="btnRepetirNumeros" class="botao repetir" type="button">🔊 Repetir números selecionados</button><p id="mensagemRepetir" class="texto-apoio"></p></section>
 <section id="regulamentoBox" class="card oculto"><h2>📜 Regulamento</h2><div id="regulamentoTexto" class="texto-apoio texto-pre"></div></section></main><footer>Dados sincronizados pelo Firebase Realtime Database.</footer>
 
-<footer class="rodape-versao"><p>Versão: V15.8</p><p>Última atualização: 16/07/2026</p></footer>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script><script src="firebase-config.js?v=15.5"></script><script src="app.js?v=15.5"></script></body></html>
+<footer class="rodape-versao"><p>Versão: V15.9</p><p>Última atualização: 16/07/2026</p></footer>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script><script src="firebase-config.js?v=15.9"></script><script src="app.js?v=15.9"></script></body></html>

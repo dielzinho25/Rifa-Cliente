@@ -23,3 +23,6 @@ textarea{width:100%;box-sizing:border-box;border:1px solid #343944;border-radius
 .premio-box{overflow:hidden}.banner-premio{display:block;width:100%;max-height:360px;object-fit:cover;border-radius:18px;margin-bottom:18px}.texto-pre{white-space:pre-wrap;line-height:1.65}.status-aberto{color:#3ddc84!important;font-weight:800}.status-fechado{color:#ff6b72!important;font-weight:800}.vendas-fechadas{opacity:.8}.vendas-fechadas form{pointer-events:none}.config-destaque{border-color:#d9a31a}
 
 .rodape-versao{text-align:center;padding:24px 16px 38px;color:#8f96a3;font-size:13px}.rodape-versao p{margin:4px 0}
+
+/* V15.9 - indicação */
+.config-retratil>summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:1.35rem;font-weight:800;list-style:none}.config-retratil>summary::-webkit-details-marker{display:none}.config-retratil>summary:after{content:"＋";font-size:2rem}.config-retratil[open]>summary:after{content:"−"}.config-conteudo{padding-top:22px}.afiliado-painel{margin-top:20px;border-top:1px solid #343944;padding-top:20px}.afiliado-painel .dash-item strong{font-size:1.35rem}.linha-botoes{display:flex;gap:12px;flex-wrap:wrap}.linha-botoes .botao{flex:1;min-width:220px}
