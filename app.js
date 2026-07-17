@@ -97,7 +97,7 @@ function copiarPix(){const chave=$('pixChave').textContent.trim();if(!chave)retu
 function aplicarConfigRifa(c){
   configRifa=Object.assign({nomeRifa:'Rifa Online',precoNumero:20,quantidadeNumeros:100,premio:'',descricao:'',dataSorteio:'',horaSorteio:'',banner:'',regulamento:'',vendasAbertas:true},c||{});
   PRECO=Number(configRifa.precoNumero||20);TOTAL=Math.max(1,Math.min(1000,Number(configRifa.quantidadeNumeros||100)));VENDAS_ABERTAS=configRifa.vendasAbertas!==false;
-  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.10';
+  document.title=(configRifa.nomeRifa||'Rifa Online')+' V15.12';
   $('nomeRifaTitulo').textContent=configRifa.nomeRifa||'Escolha seus números';
   $('quantidadeCabecalho').textContent=String(TOTAL);
   $('precoCabecalho').textContent=moeda(PRECO);

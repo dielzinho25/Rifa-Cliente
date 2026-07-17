@@ -1,7 +1,7 @@
 {
-  "name": "Rifa Online V15.11",
+  "name": "Rifa Online V15.12",
   "short_name": "Rifa",
-  "start_url": "./index.html?v=15.9",
+  "start_url": "./index.html?v=15.12",
   "scope": "./",
   "display": "standalone",
   "background_color": "#121212",
