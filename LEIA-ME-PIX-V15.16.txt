@@ -1,0 +1,3 @@
+SITE CLIENTE V15.16: URL do Render preenchida; QR Pix aparece após clicar Gerar Pix na tela Reserva registrada. O aviso de pagamento manual fica oculto quando o Render está configurado. Atualize todos os arquivos no GitHub Pages.
+BACKEND: ATUALIZAR server.js NO RENDER, pois a versão anterior buscava preço em caminho incorreto.
+IMPORTANTE: configure FIREBASE_* no Render, MP_ACCESS_TOKEN, PUBLIC_SITE_URL, PUBLIC_BACKEND_URL, MP_WEBHOOK_SECRET. O serviço não gera Pix se Firebase não estiver configurado. Teste pagamento antes de vender.
