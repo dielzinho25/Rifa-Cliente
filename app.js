@@ -183,7 +183,7 @@ async function gerarPixAutomatico(){
    method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
    body:JSON.stringify({reservaId:reservaAtualId})
   });
-  const data=await response.json();
+  const data=await response.json().catch(()=>({error:'Resposta inválida do servidor Pix.'}));
   if(!response.ok)throw Error(data.error||data.erro||'Não foi possível gerar o Pix.');
   const copia=String(data.pixCopiaECola||data.qr_code||'');
   if(!copia)throw Error('O servidor não retornou o código Pix.');
@@ -194,7 +194,7 @@ async function gerarPixAutomatico(){
   const img=$('pixQrAutomatico');
   if(qr){img.src='data:image/png;base64,'+qr;img.style.display='block';img.classList.remove('oculto');}
   status.textContent='Pix gerado. Aguardando confirmação do pagamento pelo Mercado Pago.';
- }catch(err){status.textContent=err.message||'Falha na geração do Pix.';}
+ }catch(err){const msg=err?.message||'Falha na geração do Pix.';status.textContent=/Failed to fetch|NetworkError|Load failed/i.test(msg)?'Não foi possível conectar ao Render. Confira se o backend está Live e se o CORS permite https://dielzinho25.github.io.':'Erro ao gerar Pix: '+msg;console.error('Falha Pix',err);}
  finally{botao.disabled=false;}
 }
 
